@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>File Upload and Proof Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+        }
+        h1 {
+            color: #333;
+        }
+        .message {
+            color: green;
+            margin-bottom: 20px;
+        }
+        .error {
+            color: red;
+            margin-bottom: 20px;
+        }
+        .proof-details,
+        .results {
+            margin-top: 20px;
+        }
+        .proof-details ul,
+        .results ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .proof-details li,
+        .results li {
+            margin-bottom: 10px;
+        }
+        .proof-details li strong,
+        .results li strong {
+            display: inline-block;
+            width: 250px;
+            color: #333;
+        }
+        .results h2 {
+            color: #333;
+            margin-top: 30px;
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
+        }
+        .button-container {
+            margin-top: 20px;
+        }
+        input[type="submit"] {
+            margin-right: 10px;
+            padding: 10px 15px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Upload File</h1>
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+    {% if message %}
+        <p class="message">{{ message }}</p>
+        {% if proof %}
+            <div class="proof-details">
+                <h2>Proof Details</h2>
+                <ul>
+                    <li><strong>Commitment (t):</strong> {{ proof.t }}</li>
+                    <li><strong>Challenge (c):</strong> {{ proof.c }}</li>
+                    <li><strong>Response (s):</strong> {{ proof.s }}</li>
+                    <li><strong>Public Value (h):</strong> {{ proof.h }}</li>
+                    <li><strong>Verification (t'):</strong> {{ proof.t_prime }}</li>
+                    <li><strong>Proof Valid:</strong> {{ proof.valid }}</li>
+                </ul>
+            </div>
+        {% endif %}
+        {% if results %}
+            <div class="results">
+                <h2>Process Results</h2>
+                <ul>
+                    {% for key, value in results.items() %}
+                        <li><strong>{{ key }}:</strong> {{ value }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+    {% endif %}
+    <form method="POST" action="/upload" enctype="multipart/form-data">
+        <input type="file" name="file">
+        <input type="submit" value="Upload">
+    </form>
+    <div class="button-container">
+        <form method="POST" action="/clear_log">
+            <input type="submit" value="Clear Deduplication Log">
+        </form>
+        <form method="POST" action="/get_results">
+            <input type="submit" value="Get Results">
+        </form>
+    </div>
+</body>
+</html>
